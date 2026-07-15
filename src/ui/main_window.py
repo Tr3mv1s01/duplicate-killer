@@ -20,7 +20,7 @@ from src.ui.dialogs import (
 )
 from src.ui.theme import COLORS, FONTS, apply_theme
 from src.utils.constants import APP_NAME, STRINGS
-from src.utils.helpers import format_size, format_size_with_unit
+from src.utils.helpers import format_size, format_size_with_unit, is_copy_filename
 from src.logger.logger import setup_logger
 
 logger = setup_logger(__name__)
@@ -332,8 +332,15 @@ class MainWindow(ctk.CTk):
 
     def _select_all(self):
         for card in self._result_cards:
-            for var, _ in card.checkboxes:
-                var.set(True)
+            copies = [fi.path for _, fi in card.checkboxes if is_copy_filename(fi.path)]
+            if copies:
+                for var, fi in card.checkboxes:
+                    var.set(is_copy_filename(fi.path))
+            else:
+                for var, _ in card.checkboxes[:-1]:
+                    var.set(True)
+                for var, _ in card.checkboxes[-1:]:
+                    var.set(False)
 
     def _deselect_all(self):
         for card in self._result_cards:

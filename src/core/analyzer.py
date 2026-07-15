@@ -6,6 +6,7 @@ from typing import Dict, List
 from src.core.hash_engine import compute_hash
 from src.core.scanner import FileInfo
 from src.logger.logger import setup_logger
+from src.utils.helpers import sort_duplicate_files
 
 logger = setup_logger(__name__)
 
@@ -53,6 +54,10 @@ class Analyzer:
 
             for hash_value, file_list in hash_groups.items():
                 if len(file_list) > 1:
+                    paths = [f.path for f in file_list]
+                    sorted_paths = sort_duplicate_files(paths)
+                    path_order = {p: i for i, p in enumerate(sorted_paths)}
+                    file_list.sort(key=lambda f: path_order.get(f.path, 0))
                     wasted = sum(f.size for f in file_list[1:])
                     result.append(DuplicateGroup(files=file_list, total_wasted=wasted))
 

@@ -1,4 +1,5 @@
 import os
+import re
 
 
 def format_size(size_bytes: int) -> str:
@@ -34,6 +35,27 @@ def get_file_name(file_path: str) -> str:
 def get_file_extension(file_path: str) -> str:
     _, ext = os.path.splitext(file_path)
     return ext.lower()
+
+
+def is_copy_filename(file_path: str) -> bool:
+    name = os.path.basename(file_path)
+    name_no_ext, _ = os.path.splitext(name)
+    return bool(re.search(r'\s+\(\d+\)$|\s+-\s+Copy$|^Copy\s+of\s+', name_no_ext))
+
+
+def get_base_name(file_path: str) -> str:
+    name = os.path.basename(file_path)
+    name_no_ext, _ = os.path.splitext(name)
+    name_no_ext = re.sub(r'\s+\(\d+\)$|\s+-\s+Copy$|^Copy\s+of\s+', '', name_no_ext)
+    return name_no_ext.strip()
+
+
+def sort_duplicate_files(file_paths: list) -> list:
+    copies = [p for p in file_paths if is_copy_filename(p)]
+    originals = [p for p in file_paths if not is_copy_filename(p)]
+    copies.sort(key=lambda p: (get_base_name(p).lower(), p.lower()))
+    originals.sort(key=lambda p: p.lower())
+    return originals + copies
 
 
 def is_excluded(file_path: str, excluded_folders: list, excluded_extensions: list) -> bool:
