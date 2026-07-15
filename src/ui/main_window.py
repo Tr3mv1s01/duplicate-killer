@@ -332,8 +332,8 @@ class MainWindow(ctk.CTk):
 
     def _select_all(self):
         for card in self._result_cards:
-            for var, _ in card.checkboxes:
-                var.set(True)
+            for i, (var, _) in enumerate(card.checkboxes):
+                var.set(i > 0)
 
     def _deselect_all(self):
         for card in self._result_cards:
