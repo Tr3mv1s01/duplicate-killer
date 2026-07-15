@@ -8,6 +8,12 @@ dist/
 build/
 *.exe
 *.spec
+*.bin
+
+# Nuitka
+*.onefile-build
+*.build
+*.dist
 
 # IDE
 .vscode/
