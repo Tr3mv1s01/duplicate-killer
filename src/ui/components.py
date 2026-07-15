@@ -53,7 +53,8 @@ class ProgressCard(ctk.CTkFrame):
 class ResultCard(ctk.CTkFrame):
     def __init__(self, master, group_index: int, files: list, wasted: str, lang: dict):
         super().__init__(master, corner_radius=10)
-        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=0)
+        self.grid_columnconfigure(1, weight=1)
         self.checkboxes = []
 
         copies_text = f"{len(files)} {lang['copies']}"
@@ -62,7 +63,7 @@ class ResultCard(ctk.CTkFrame):
             self, text=header_text, font=FONTS["heading"],
             anchor="w"
         )
-        self.header.grid(row=0, column=0, padx=12, pady=(8, 4), sticky="w")
+        self.header.grid(row=0, column=0, columnspan=2, padx=12, pady=(8, 4), sticky="w")
 
         for i, file_info in enumerate(files):
             from src.core.scanner import FileInfo
@@ -76,7 +77,7 @@ class ResultCard(ctk.CTkFrame):
                 checkbox_width=18,
                 checkbox_height=18,
             )
-            cb.grid(row=i + 1, column=0, padx=(12, 0), pady=1, sticky="w")
+            cb.grid(row=i + 1, column=0, padx=(12, 4), pady=2, sticky="w")
 
             name_label = ctk.CTkLabel(
                 self,
@@ -84,12 +85,12 @@ class ResultCard(ctk.CTkFrame):
                 font=FONTS["small"],
                 anchor="w",
             )
-            name_label.grid(row=i + 1, column=0, padx=(40, 12), pady=1, sticky="w")
+            name_label.grid(row=i + 1, column=1, padx=(0, 12), pady=2, sticky="w")
 
             self.checkboxes.append((var, file_info))
 
         self.bottom_padding = ctk.CTkLabel(self, text="")
-        self.bottom_padding.grid(row=len(files) + 1, column=0, pady=(0, 4))
+        self.bottom_padding.grid(row=len(files) + 1, column=0, columnspan=2, pady=(0, 4))
 
     def get_selected(self) -> list:
         return [fi for var, fi in self.checkboxes if var.get()]
