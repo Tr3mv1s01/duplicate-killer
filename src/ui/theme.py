@@ -1,13 +1,23 @@
+import platform
+
 import customtkinter as ctk
 
-FONT_FAMILY = "Segoe UI"
+if platform.system() == "Windows":
+    FONT_FAMILY = "Segoe UI"
+    MONO_FAMILY = "Consolas"
+elif platform.system() == "Darwin":
+    FONT_FAMILY = "SF Pro"
+    MONO_FAMILY = "Menlo"
+else:
+    FONT_FAMILY = "Ubuntu"
+    MONO_FAMILY = "Liberation Mono"
 
 FONTS = {
     "title": (FONT_FAMILY, 22, "bold"),
     "heading": (FONT_FAMILY, 16, "bold"),
     "body": (FONT_FAMILY, 13),
     "small": (FONT_FAMILY, 11),
-    "mono": ("Consolas", 12),
+    "mono": (MONO_FAMILY, 12),
 }
 
 COLORS = {
